@@ -1,0 +1,210 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[74]:
+
+
+# The project is completed by Michael Zats
+
+# Medical Insurance Costs
+# Goals of the project:
+
+# Find out the average age of the patients in the dataset.
+# Analyze where a majority of the individuals are from.
+# Look at the different costs between smokers vs. non-smokers.
+# Figure out what the average age is for someone who has at least one child in this dataset.
+
+
+# In[35]:
+
+
+#Step 1: preparation
+import csv
+
+
+with open("insurance.csv") as insurance_data:
+    data = csv.DictReader(insurance_data)
+    ages = []
+    sexes = []
+    bmis = []
+    numbers_of_children = []
+    smoker_statuses = []
+    regions = []
+    charges = []
+
+    for line in data:
+        ages.append(int(line["age"]))
+        sexes.append(line["sex"])
+        bmis.append(line["bmi"])
+        numbers_of_children.append(line["children"])
+        smoker_statuses.append(line["smoker"])
+        regions.append(line["region"])
+        charges.append(line["charges"])
+
+
+# In[94]:
+
+
+#Step 2:
+
+# Dataset
+total_count = 0
+for entry in ages:
+    total_count += round (1)
+print("The dataset has {} entries".format(total_count))
+
+# Average chagre
+total_cost = 0
+for charge in charges:
+    total_cost += float(charge)
+average_cost = round (total_cost/len(charges))
+print("The average charge is {}.".format(average_cost))
+
+# Average age
+total_age = 0
+for age in ages:
+    total_age += float(age)
+average_age = round (total_age/len(ages))
+print("The average age is {}.".format(average_age))
+
+# Demographics
+pop_25 = 0
+pop_40 = 0
+pop_55 = 0
+pop_O55 = 0
+
+for i in range(len(ages)):
+    if ages[i] <= 25:
+        pop_25 += 1
+    elif ages[i] <= 40:
+        pop_40 += 1
+    elif ages[i] <= 55:
+        pop_55 += 1
+    else:
+        pop_O55 += 1
+
+print("""
+Demographics:
+age <= 25: {}
+25 < age <= 40: {}
+40 < age <= 55: {}
+age > 55: {}"""
+      .format(pop_25, pop_40,pop_55,pop_O55))
+
+#Genders
+genders_ = {}
+for sex in sexes:
+    if sex not in genders_:
+        genders_[sex] = 0
+    else:
+        i = genders_[sex]
+        genders_.update({sex:i+1})
+
+print("The Genders are: " + str(genders_))
+
+# Average of chilren
+total_children = 0
+for number_of_children in numbers_of_children:
+    total_children += float(number_of_children)
+average_number_of_children = round (total_children/len(numbers_of_children))
+print("""
+The average number of children is {}.""".format(average_number_of_children))
+
+# Most frequent region
+regions_analysis = {}
+for region in regions:
+    if region not in regions_analysis:
+        regions_analysis[region] = 0
+    else:
+        i = regions_analysis[region]
+        regions_analysis.update({region:i+1})
+
+print("Regions are distributed as follows: " + str(regions_analysis))
+
+
+from collections import Counter
+c = Counter(regions_analysis)
+print ("""
+The most popular region is:""")
+c.most_common(1)
+
+
+
+
+
+
+
+# In[105]:
+
+
+#Step 3:
+
+#smoker analysis
+total_smoker_charge = 0
+total_non_smoker_charge = 0
+number_of_smokers = smoker_statuses.count("yes")
+number_of_non_smokers = smoker_statuses.count("no")
+print("There are {} smokers and {} non-smokers in the dataset.".format(number_of_smokers,number_of_non_smokers) )
+
+tot_smokers_25 = 0
+tot_smokers_40 = 0
+tot_smokers_55 = 0
+tot_smokers_O55 = 0
+
+for i in range(len(ages)):
+    if ages[i] <= 25 and smoker_statuses[i] == "yes":
+        tot_smokers_25 += 1
+    elif ages[i] <= 40 and smoker_statuses[i] == "yes":
+        tot_smokers_40 += 1
+    elif ages[i] <= 55 and smoker_statuses[i] == "yes":
+        tot_smokers_55 += 1
+    elif ages[i] > 50 and smoker_statuses[i] == "yes":
+        tot_smokers_O55 += 1
+
+smoker25_percent = round (tot_smokers_25 / pop_25 *100)
+smoker40_percent = round (tot_smokers_40 / pop_40 *100)
+smoker55_percent = round (tot_smokers_55 / pop_55 *100)
+smokerO55_percent = round (tot_smokers_O55 / pop_O55 *100)
+
+print(""""
+Smokers by age:
+age <= 25: {}%
+25 < age <= 40: {}%
+40 < age <= 55: {}%
+age > 55: {}%"""
+      .format(smoker25_percent, smoker40_percent, smoker55_percent, smokerO55_percent))
+
+
+for i in range(len(smoker_statuses)):
+    if smoker_statuses[i] == "yes":
+        total_smoker_charge += float(charges[i])
+    else:
+        total_non_smoker_charge += float(charges[i])
+
+avg_smoker_charge = round (total_smoker_charge/number_of_smokers)
+avg_non_smoker_charge = round (total_non_smoker_charge/number_of_non_smokers)
+
+deviation = round (avg_smoker_charge/avg_non_smoker_charge)*100 -100
+
+print("Smokers on average pay {}% more than non-smokers".format(deviation))
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
